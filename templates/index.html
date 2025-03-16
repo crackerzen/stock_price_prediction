@@ -27,7 +27,7 @@
         <form method="POST">
             <div class="mb-3">
                 <label for="stock" class="form-label">Enter Stock Ticker:</label>
-                <input type="text" class="form-control" id="stock" name="stock" value="POWERGRID.NS">
+                <input type="text" class="form-control" id="stock" name="stock" value="{{ stock }}">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -55,7 +55,7 @@
         
         {% if data_desc %}
         <div class="table-responsive">
-            <h3 class="mt-4">Descriptive Data from Jan 2000 to Nov 2024</h3>
+            <h3 class="mt-4">Descriptive Data from Jan 2000 till Mar 2025</h3>
             {{ data_desc | safe }}
         </div>
         {% endif %}
