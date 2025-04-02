@@ -1,12 +1,99 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trend Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin-top: 50px;
+        }
+        .chart-container {
+            margin-top: 30px;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .download-link {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Stock Trend Prediction</h1>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="stock" class="form-label">Enter Stock Ticker:</label>
+                <input type="text" class="form-control" id="stock" name="stock" value="{{ stock }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        
+        {% if plot_path_ema_20_50 %}
+        <div class="chart-container">
+            <h3>Closing Price vs Time (20 & 50 Days EMA)</h3>
+            <img src="{{ url_for('static', filename='ema_20_50.png') }}" class="img-fluid" alt="EMA 20 & 50">
+        </div>
+        {% endif %}
+        
+        {% if plot_path_ema_100_200 %}
+        <div class="chart-container">
+            <h3>Closing Price vs Time (100 & 200 Days EMA)</h3>
+            <img src="{{ url_for('static', filename='ema_100_200.png') }}" class="img-fluid" alt="EMA 100 & 200">
+        </div>
+        {% endif %}
+        
+        {% if plot_path_prediction %}
+        <div class="chart-container">
+            <h3>Prediction vs Original Trend</h3>
+            <img src="{{ url_for('static', filename='stock_prediction.png') }}" class="img-fluid" alt="Prediction vs Original">
+        </div>
+        {% endif %}
+        
+        {% if data_desc %}
+        <div class="table-responsive">
+            <h3 class="mt-4">Descriptive Data from Jan 2000 till Mar 2025</h3>
+            {{ data_desc | safe }}
+        </div>
+        {% endif %}
+        
+        {% if dataset_link %}
+        <div class="download-link">
+            <a href="{{ url_for('download_file', filename=dataset_link.split('/')[-1]) }}" class="btn btn-success" download>Download Dataset (CSV)</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Based Stock Market Prediction</title>
+    <title>Stock Trend Prediction | Financial Analysis Tool</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
             --primary-color: #2563eb;
@@ -14,90 +101,70 @@
             --accent-color: #3b82f6;
             --success-color: #10b981;
             --light-bg: #f8fafc;
-            --dark-bg: #1e293b;
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --transition-speed: 0.3s;
         }
-
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-bg);
             color: #334155;
         }
-
+        
         .navbar {
             background-color: var(--primary-color);
             box-shadow: var(--card-shadow);
         }
-
+        
         .navbar-brand {
             font-weight: 700;
             color: white !important;
         }
-
-        .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-            transition: color var(--transition-speed);
-        }
-
-        .navbar-nav .nav-link:hover,
-        .navbar-nav .nav-link.active {
-            color: white;
-        }
-
+        
         .hero-section {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 6rem 0;
+            padding: 3rem 0;
             margin-bottom: 2rem;
         }
-
+        
         .hero-title {
             font-weight: 700;
             margin-bottom: 1rem;
-            font-size: 2.5rem;
         }
-
+        
         .hero-subtitle {
             opacity: 0.9;
             max-width: 600px;
             margin: 0 auto;
-            font-size: 1.1rem;
         }
-
+        
         .content-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 1rem;
         }
-
+        
         .search-card {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 2rem;
             box-shadow: var(--card-shadow);
             margin-bottom: 2rem;
-            transition: transform var(--transition-speed);
         }
-
-        .search-card:hover {
-            transform: translateY(-5px);
-        }
-
+        
         .chart-card {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 1.5rem;
             box-shadow: var(--card-shadow);
             margin-bottom: 2rem;
-            transition: transform var(--transition-speed);
+            transition: transform 0.3s ease;
         }
-
+        
         .chart-card:hover {
             transform: translateY(-5px);
         }
-
+        
         .chart-title {
             color: var(--primary-color);
             font-weight: 600;
@@ -106,87 +173,81 @@
             padding-bottom: 0.5rem;
             border-bottom: 1px solid #e2e8f0;
         }
-
+        
         .chart-img {
             border-radius: 6px;
             width: 100%;
             height: auto;
         }
-
+        
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
             padding: 0.5rem 1.5rem;
             font-weight: 600;
-            transition: background-color var(--transition-speed);
         }
-
+        
         .btn-primary:hover {
             background-color: var(--secondary-color);
             border-color: var(--secondary-color);
         }
-
+        
         .btn-success {
             background-color: var(--success-color);
             border-color: var(--success-color);
             padding: 0.5rem 1.5rem;
             font-weight: 600;
         }
-
+        
         .stats-card {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 1.5rem;
             box-shadow: var(--card-shadow);
             margin-bottom: 2rem;
         }
-
+        
+        .table thead {
+            background-color: #f1f5f9;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        .icon-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .icon-feature i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 1rem;
+            width: 40px;
+            text-align: center;
+        }
+        
         .footer {
-            background-color: var(--dark-bg);
+            background-color: #1e293b;
             color: white;
-            padding: 3rem 0;
+            padding: 2rem 0;
             margin-top: 3rem;
         }
-
-        .footer a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color var(--transition-speed);
-        }
-
-        .footer a:hover {
-            color: white;
-        }
-
+        
         .loading-spinner {
             display: none;
             margin-left: 1rem;
         }
-
-        /* Animations */
-        .animate-fade-in {
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
+        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .hero-section {
-                padding: 4rem 0;
+                padding: 2rem 0;
             }
-
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
+            
             .search-card, .chart-card, .stats-card {
                 padding: 1rem;
             }
@@ -197,23 +258,20 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.html"><i class="fas fa-chart-line me-2"></i>Stock Predictor</a>
+            <a class="navbar-brand" href="#"><i class="fas fa-chart-line me-2"></i>StockPredict Pro</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
+                        <a class="nav-link active" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
+                        <a class="nav-link" href="#">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="documentation.html">Documentation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
+                        <a class="nav-link" href="#">Documentation</a>
                     </li>
                 </ul>
             </div>
@@ -221,17 +279,17 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="hero-section text-center animate-fade-in">
+    <header class="hero-section text-center">
         <div class="container">
-            <h1 class="hero-title">AI BASED STOCK MARKET PREDICTION</h1>
-            <p class="hero-subtitle">Leveraging machine learning algorithms to predict stock market trends with high accuracy</p>
+            <h1 class="hero-title">AI Based Stock Market Prediction</h1>
+            <p class="hero-subtitle">Leverage machine learning algorithms to predict stock market trends with high accuracy</p>
         </div>
     </header>
 
     <!-- Main Content -->
     <div class="content-container">
         <!-- Search Form -->
-        <div class="search-card animate-fade-in">
+        <div class="search-card">
             <div class="row">
                 <div class="col-md-8">
                     <form method="POST" id="stockForm" class="needs-validation" novalidate>
@@ -239,7 +297,7 @@
                             <label for="stock" class="form-label fw-bold">Enter Stock Ticker Symbol:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="stock" name="stock" placeholder="e.g., ^NSEI, RELIANCE.NS, HDFCBANK.NS" value="{{ stock }}" required>
+                                <input type="text" class="form-control" id="stock" name="stock" placeholder="e.g., AAPL, MSFT, GOOG" value="{{ stock }}" required>
                                 <button type="submit" class="btn btn-primary" id="submitBtn">
                                     Analyze Stock
                                     <span class="spinner-border spinner-border-sm loading-spinner" id="loadingSpinner" role="status"></span>
@@ -273,7 +331,7 @@
         <!-- Results Section -->
         <div id="resultsSection" class="{% if not plot_path_ema_20_50 %}d-none{% endif %}">
             <h2 class="mb-4">Analysis Results {% if stock %}<span class="text-primary">for {{ stock }}</span>{% endif %}</h2>
-
+            
             <div class="row">
                 <!-- EMA 20 & 50 Chart -->
                 {% if plot_path_ema_20_50 %}
@@ -285,7 +343,7 @@
                     </div>
                 </div>
                 {% endif %}
-
+                
                 <!-- EMA 100 & 200 Chart -->
                 {% if plot_path_ema_100_200 %}
                 <div class="col-lg-6">
@@ -297,7 +355,7 @@
                 </div>
                 {% endif %}
             </div>
-
+            
             <!-- Prediction Chart -->
             {% if plot_path_prediction %}
             <div class="chart-card">
@@ -318,7 +376,7 @@
                 </div>
             </div>
             {% endif %}
-
+            
             <!-- Statistical Data -->
             {% if data_desc %}
             <div class="stats-card">
@@ -329,7 +387,7 @@
                 <p class="text-muted mt-3">This table provides key statistical metrics calculated from historical data spanning from January 2000 to March 2025.</p>
             </div>
             {% endif %}
-
+            
             <!-- Download Section -->
             {% if dataset_link %}
             <div class="text-center mb-5">
@@ -342,40 +400,39 @@
             {% endif %}
         </div>
     </div>
-
+    
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5><i class="fas fa-chart-line me-2"></i>Stock Predictor</h5>
+                    <h5><i class="fas fa-chart-line me-2"></i>StockPredict Pro</h5>
                     <p>A final year project demonstrating the application of machine learning algorithms in financial market prediction.</p>
                 </div>
                 <div class="col-md-3">
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="documentation.html">Documentation</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#" class="text-white-50">Home</a></li>
+                        <li><a href="#" class="text-white-50">Documentation</a></li>
+                        <li><a href="#" class="text-white-50">About Project</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h5>Resources</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#">GitHub Repository</a></li>
-                        <li><a href="#">Technical Paper</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="#" class="text-white-50">GitHub Repository</a></li>
+                        <li><a href="#" class="text-white-50">Technical Paper</a></li>
+                        <li><a href="#" class="text-white-50">Contact</a></li>
                     </ul>
                 </div>
             </div>
             <hr class="mt-4 mb-3" style="border-color: rgba(255,255,255,0.1);">
             <div class="text-center text-white-50">
-                <small>© 2025 Stock Predictor | Final Year Project</small>
+                <small>© 2025 StockPredict Pro | Final Year Project</small>
             </div>
         </div>
     </footer>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Show loading spinner when form is submitted
@@ -383,7 +440,7 @@
             document.getElementById('loadingSpinner').style.display = 'inline-block';
             document.getElementById('submitBtn').disabled = true;
         });
-
+        
         // Form validation
         (function() {
             'use strict';

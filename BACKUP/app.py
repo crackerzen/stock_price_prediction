@@ -10,7 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 import os
 plt.style.use("fivethirtyeight")
 
-# Initialize Flask app 
+# Initialize Flask app
 app = Flask(__name__)
 
 # Load the model (make sure your model is in the correct path)
